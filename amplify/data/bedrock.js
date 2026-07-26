@@ -6,7 +6,7 @@ export function request(ctx) {
 
   return {
     resourcePath:
-      "/model/anthropic.claude-3-haiku-20240307-v1:0/invoke",
+      "/model/global.anthropic.claude-sonnet-4-5-20250929-v1:0/invoke",
     method: "POST",
     params: {
       headers: {
