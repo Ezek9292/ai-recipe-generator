@@ -32,7 +32,13 @@ export function request(ctx) {
 }
 
 export function response(ctx) {
-  return {
-    body: ctx.result.body,
-  };
+  const { statusCode, body } = ctx.result;
+
+  if (statusCode < 200 || statusCode >= 300) {
+    return {
+      error: body || `Amazon Bedrock returned HTTP ${statusCode}.`,
+    };
+  }
+
+  return { body };
 }

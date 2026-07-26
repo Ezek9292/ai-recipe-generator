@@ -36,8 +36,24 @@ function RecipeGenerator() {
         throw new Error(errors.map(({ message }) => message).join("\n"));
       }
 
-      const response = JSON.parse(data?.body || "{}");
-      setResult(response.content?.[0]?.text || "No recipe was returned.");
+      if (data?.error) {
+        throw new Error(`Amazon Bedrock request failed: ${data.error}`);
+      }
+
+      if (!data?.body) {
+        throw new Error("Amazon Bedrock returned an empty response.");
+      }
+
+      const response = JSON.parse(data.body);
+      const recipe = response.content?.find(
+        (item) => item.type === "text"
+      )?.text;
+
+      if (!recipe) {
+        throw new Error("Amazon Bedrock response did not contain recipe text.");
+      }
+
+      setResult(recipe);
     } catch (e) {
       alert(`An error occurred: ${e}`);
     } finally {
